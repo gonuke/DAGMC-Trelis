@@ -15,6 +15,9 @@ include(${SWIG_USE_FILE})
 find_package(PythonLibs REQUIRED)
 include_directories(${PYTHON_INCLUDE_PATH})
 
+find_package(MOAB REQUIRED)
+include_directories(${MOAB_INCLUDE_DIRS})
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     ${CMAKE_CURRENT_BINARY_DIR})
 
@@ -42,4 +45,4 @@ set(SWIG_MODULE_mycomp_EXTRA_DEPS ${DOT_I_DEPENDS})
 swig_add_module(mycomp python mycomp.i ${MYCOMP_SRCS})
 swig_link_libraries(mycomp
                     component clarogui navigation pickwidget cubiti clarofw
-                    ${PYTHON_LIBRARIES})
+                    ${PYTHON_LIBRARIES} ${MOAB_LIBARARIES})

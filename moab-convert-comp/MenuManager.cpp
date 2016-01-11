@@ -72,6 +72,9 @@ void MenuManager::remove_moab_menu()
 
 void MenuManager::moabConvert_triggered()
 {
-  MoabCommandExecute();
+  std::string infile("hexes_mixed.vtk");
+  std::string outfile("hexes_mixed.h5m");
+
+  MoabCommandExecute(infile, outfile);
 }
 

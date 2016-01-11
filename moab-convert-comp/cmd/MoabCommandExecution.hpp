@@ -1,14 +1,17 @@
-#include "CubitInterface.hpp"
-#include "CubitMessageHandler.hpp"
+#include <moab/MOABConfig.h>
+#include "moab/Core.hpp"
 
-bool MoabCommandExecute()
+using namespace moab;
+
+Core mb;
+
+bool MoabCommandExecute(std::string infile, std::string outfile)
 {
-  CubitMessageHandler* console = CubitInterface::get_cubit_message_handler();
-  
-  std::string output;
-  
-  output = "will execute MOAB converstion here\n";
-  console->print_message(output.c_str());
-  
+
+  mb.load_file(infile.c_str());
+
+  mb.write_file(outfile.c_str());
+
   return true;
 }
+

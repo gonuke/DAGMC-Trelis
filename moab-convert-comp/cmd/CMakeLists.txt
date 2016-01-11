@@ -14,4 +14,4 @@ set(SRC
 
 
 add_library(my_plugin MODULE ${SRC})
-target_link_libraries(my_plugin cubiti cubit_util)
+target_link_libraries(my_plugin cubiti cubit_util ${MOAB_LIBRARIES})
