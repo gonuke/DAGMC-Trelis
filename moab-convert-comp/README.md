@@ -1,10 +1,9 @@
 Purpose
 ==========
 
-This example adds a command to Trelis named `mbconvert`.  This command currently does nothing but write a message to the Trelis commandline console.
+This example adds a command to Trelis named `mbconvert`.  This command currently attempts to read an input file into MOAB and write an output file from MOAB.
 
-This example also adds a menu to Trelis with an entry to invoke `mbconvert`.  
-
+This example also adds a menu to Trelis with an entry to invoke `mbconvert`.
 
 Architecutre Notes
 =====================
@@ -26,6 +25,7 @@ This plugin also depends on:
 * libqt4-dev
 * swig
 * python2.7-dev
+* MOAB (and thus HDF5)
 
 Build
 ======
@@ -33,7 +33,7 @@ Build
 ```
 mkdir bld
 cd bld
-cmake .. -DCMAKE_PREFIX_PATH=/path/to/Trelis-15.1/bin
+cmake .. -DCMAKE_PREFIX_PATH=/path/to/Trelis-15.1/bin -DMOAB_DIR=/path/to/MOAB/lib
 make
 ```
 
