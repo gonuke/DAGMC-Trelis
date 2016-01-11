@@ -1,3 +1,5 @@
+THIS PLUGIN IS BROKEN ON AN HDF5 CONFLICT.
+
 Purpose
 ==========
 
