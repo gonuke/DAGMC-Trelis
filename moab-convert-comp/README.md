@@ -3,9 +3,17 @@ Purpose
 
 This example adds a command to Trelis named `mbconvert`.  This command currently does nothing but write a message to the Trelis commandline console.
 
-This example also adds a menu to Trelis with an entry to invoke `mbconvert`.  Rather than sending a Cubit command to the parser, the action on this menu item calls identical code to the new command.
+This example also adds a menu to Trelis with an entry to invoke `mbconvert`.  
 
-This is accomplished by including the code in multiple places.
+
+Architecutre Notes
+=====================
+
+Rather than sending a (newly added) Cubit command to the parser, the action on this menu item calls identical code to the new command.  This is accomplished by including the code in multiple places.
+
+Rather than invoking the menu addition from within the component directly, the
+`MenuManager` class is useful because it inherits from different Qt base
+classes.
 
 Dependencies
 =============
