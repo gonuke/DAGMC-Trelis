@@ -10,10 +10,18 @@ find_package(Cubit REQUIRED CONFIG)
 include_directories(${CUBIT_INCLUDE_DIRS})
 
 set(SRC
-    MyPlugin.cpp
-    MyPlugin.hpp
     MCNPInput.cpp
     MCNPInput.hpp
+    dataref.hpp
+    GeometryContext.hpp
+    GeometryContext.cpp
+    geometry.hpp
+    geometry.cpp
+    version.hpp
+    volumes.hpp
+    volumes.cpp
+    MyPlugin.cpp
+    MyPlugin.hpp
     MCNPImportCommand.cpp
     MCNPImportCommand.hpp)
 
