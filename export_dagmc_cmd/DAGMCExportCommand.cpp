@@ -99,7 +99,7 @@ bool DAGMCExportCommand::execute(CubitCommandData &data)
 
   rval = parse_options(data);
   CHK_MB_ERR_RET("Error parsing options: ",rval);
-  
+
   // Always tag with the faceting_tol and geometry absolute resolution
   // If file_set is defined, use that, otherwise (file_set == NULL) tag the interface
   moab::EntityHandle set = 0;
@@ -114,22 +114,22 @@ bool DAGMCExportCommand::execute(CubitCommandData &data)
 
   rval = create_topology(entmap);
   CHK_MB_ERR_RET("Error creating topology: ",rval);
-  
+
   rval = store_surface_senses(entmap[2], entmap[3]);
   CHK_MB_ERR_RET("Error storing surface senses: ",rval);
-  
+
   rval = store_curve_senses(entmap[1], entmap[2]);
   CHK_MB_ERR_RET("Error storing curve senses: ",rval);
-    
+
   rval = store_groups(entmap);
   CHK_MB_ERR_RET("Error storing groups: ",rval);
-  
+
   entmap[3].clear();
   entmap[4].clear();
-  
+
   rval = create_vertices(entmap[0]);
   CHK_MB_ERR_RET("Error creating vertices: ",rval);
-  
+
   rval = create_curve_facets(entmap[1], entmap[0]);
   CHK_MB_ERR_RET("Error faceting curves: ",rval);
 
@@ -142,7 +142,7 @@ bool DAGMCExportCommand::execute(CubitCommandData &data)
   CHK_MB_ERR_RET("Error writing file: ",rval);
 
   teardown();
-  
+
   return result;
 }
 
@@ -165,7 +165,7 @@ moab::ErrorCode DAGMCExportCommand::parse_options(CubitCommandData &data)
   // read parsed command for normal tolerance
   data.get_value("normal_tolerance",norm_tol);
   message << "Setting normal tolerance to " << norm_tol << std::endl;
-  
+
   // read parsed command for verbosity
   verbose_warnings = data.find_keyword("verbose");
   fatal_on_curves = data.find_keyword("fatal_on_curves");
@@ -186,15 +186,15 @@ moab::ErrorCode DAGMCExportCommand::create_tags()
   rval = mdbImpl->tag_get_handle(GEOM_DIMENSION_TAG_NAME, 1, moab::MB_TYPE_INTEGER,
                                  geom_tag, moab::MB_TAG_SPARSE | moab::MB_TAG_CREAT, &negone);
   CHK_MB_ERR_RET_MB("Error creating geom_tag",rval);
-    
+
   rval = mdbImpl->tag_get_handle(GLOBAL_ID_TAG_NAME, 1, moab::MB_TYPE_INTEGER,
                                  id_tag, moab::MB_TAG_DENSE | moab::MB_TAG_CREAT, &zero);
   CHK_MB_ERR_RET_MB("Error creating id_tag",rval);
-  
+
   rval = mdbImpl->tag_get_handle(NAME_TAG_NAME, NAME_TAG_SIZE, moab::MB_TYPE_OPAQUE,
                                  name_tag, moab::MB_TAG_SPARSE | moab::MB_TAG_CREAT);
   CHK_MB_ERR_RET_MB("Error creating name_tag",rval);
-  
+
   rval = mdbImpl->tag_get_handle(CATEGORY_TAG_NAME, CATEGORY_TAG_SIZE, moab::MB_TYPE_OPAQUE,
                                  category_tag, moab::MB_TAG_SPARSE | moab::MB_TAG_CREAT);
   CHK_MB_ERR_RET_MB("Error creating category_tag",rval);
@@ -203,13 +203,15 @@ moab::ErrorCode DAGMCExportCommand::create_tags()
                                  moab::MB_TAG_SPARSE | moab::MB_TAG_CREAT);
   CHK_MB_ERR_RET_MB("Error creating faceting_tol_tag",rval);
 
-  rval = mdbImpl->tag_get_handle("GEOMETRY_RESABS", 1, moab::MB_TYPE_DOUBLE, 
+  rval = mdbImpl->tag_get_handle("GEOMETRY_RESABS", 1, moab::MB_TYPE_DOUBLE,
                                  geometry_resabs_tag, moab::MB_TAG_SPARSE | moab::MB_TAG_CREAT);
   CHK_MB_ERR_RET_MB("Error creating geometry_resabs_tag",rval);
 
   moab::EntityHandle set = 0;
   rval = mdbImpl->tag_set_data(geometry_resabs_tag, &set, 1, &GEOMETRY_RESABS);
   CHK_MB_ERR_RET_MB("Error setting geometry_resabs_tag",rval);
+
+  return rval;
 
 }
 
@@ -229,8 +231,8 @@ void DAGMCExportCommand::teardown()
     message << "----- All surfaces faceted correctly  -----" << std::endl;
   }
   message << "***** End of Faceting Summary Information *****" << std::endl;
- 
-  CubitInterface::get_cubit_message_handler()->print_message(message.str().c_str()); 
+
+  CubitInterface::get_cubit_message_handler()->print_message(message.str().c_str());
   message.str("");
   delete myGeomTool;
   delete mdbImpl;
@@ -588,7 +590,7 @@ moab::ErrorCode DAGMCExportCommand::create_curve_facets(refentity_handle_map& cu
 
   // Map iterator
   refentity_handle_map_itor ci;
-  
+
   // Create geometry for all curves
   GMem data;
   for (ci = curve_map.begin(); ci != curve_map.end(); ++ci) {
@@ -600,12 +602,12 @@ moab::ErrorCode DAGMCExportCommand::create_curve_facets(refentity_handle_map& cu
     data.clear();
     // Facet curve according to parameters and CGM version
     s = edge->get_graphics(data, norm_tol, faceting_tol);
-    
+
     if( s != CUBIT_SUCCESS )
       {
         // if we fatal on curves
         if(fatal_on_curves)
-          {  
+          {
              message << "Failed to facet the curve " << edge->id() << std::endl;
              return moab::MB_FAILURE;
            }
@@ -617,18 +619,18 @@ moab::ErrorCode DAGMCExportCommand::create_curve_facets(refentity_handle_map& cu
           }
         continue;
       }
-    
+
     std::vector<CubitVector> points = data.point_list();
-    
+
     // Need to reverse data?
-    if (curve->bridge_sense() == CUBIT_REVERSED) 
+    if (curve->bridge_sense() == CUBIT_REVERSED)
       std::reverse(points.begin(), points.end());
-    
+
     // Check for closed curve
     RefVertex *start_vtx, *end_vtx;
     start_vtx = edge->start_vertex();
     end_vtx = edge->end_vertex();
-    
+
     // Special case for point curve
     if (points.size() < 2) {
       if (start_vtx != end_vtx || curve->measure() > GEOMETRY_RESABS) {
@@ -648,11 +650,11 @@ moab::ErrorCode DAGMCExportCommand::create_curve_facets(refentity_handle_map& cu
       message << "Warning: topology and geometry inconsistant for possibly closed curve "
               << edge->id() << std::endl;
     }
-    
+
     // Check proximity of vertices to end coordinates
     if ((start_vtx->coordinates() - points.front()).length() > GEOMETRY_RESABS ||
         (end_vtx->coordinates() - points.back()).length() > GEOMETRY_RESABS) {
-      
+
       curve_warnings--;
       if (curve_warnings >= 0 || verbose_warnings) {
         message << "Warning: vertices not at ends of curve " << edge->id() << std::endl;
@@ -774,7 +776,7 @@ moab::ErrorCode DAGMCExportCommand::create_surface_facets(refentity_handle_map& 
     }
 
     std::vector<int> facet_list = data.facet_list();
-    
+
     // record the failures for information
     if (facet_list.size() == 0)
       {
